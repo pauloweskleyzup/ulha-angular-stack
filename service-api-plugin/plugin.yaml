@@ -1,0 +1,81 @@
+name: service-api-plugin
+description: This plugin allows you to quickly create a base structure of a service that communicates with an API.
+display-name: Service API Plugin
+picture: plugin.png
+category: frontend
+compatibility:
+ technologies:
+  - "Angular"
+  - "Web"
+about: docs/about.md
+usage: docs/usage.md
+use-case: docs/use-case.md
+implementation: docs/implementation.md
+technologies:
+  - "Angular"
+  - "Api"
+  - "Rest"
+  - "Typescript"
+  - "Web"
+types:
+  - app
+inputs:
+  - label: What is the api host?
+    type: text
+    name: api_host
+    default: localhost
+  
+  - label: What is the host port?
+    type: int
+    name: api_port
+    default: 3000
+  
+  - label: What is the entity name (resource)? Please input name in single
+    type: text
+    name: entity_name
+    default: "pet"
+  
+  - label: What is the path where the component will be create?
+    type: text
+    name: component_path
+    default: src/app/
+  
+  - label: Do you want configure http module?
+    type: bool
+    name: config_module
+    default: false
+computedInputs:
+  "entity_pascal": "{{ entity_name | pascalcase }}"
+  "entity_camel": "{{ entity_name | camelcase }}"
+  "filename": "{{ entity_name | replace(' ', '-')}}"
+  "component_path": "{{ inputs.component_path + computed_inputs.filename }}"
+  "service_classname": "{{ entity_pascal + 'Service'}}"
+hooks:
+  - type: run-script
+    trigger: before-render
+    script: ../scripts/build-http-variables.py
+  - type: code-transformation
+    trigger: after-render
+    working-dir: "{{target_path}}"
+    path: src/app/app.module.ts
+    code-transformation:
+      typescript:
+        import:
+          - insert: >
+              import { HttpClientModule } from '@angular/common/http';
+        annotation:
+          - NgModule:
+              - attribute: imports
+                insert: >
+                  HttpClientModule
+    condition:
+      variable: config_module
+      operator: "=="
+      value: true
+  
+  - type: run
+    trigger: after-render
+    commands:
+      - echo Ulha! Your service has been create!
+      - echo You can read doc files to more informations about to use the plugin ;)
+      - echo Enjoy Dev!

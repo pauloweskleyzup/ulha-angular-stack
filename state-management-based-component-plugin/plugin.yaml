@@ -1,0 +1,133 @@
+name: state-management-based-component-plugin
+description: Creates an Angular component with defined architecture and fully configured state management
+display-name: State Management Based Component Plugin
+picture: plugin.png
+category: frontend
+compatibility:
+  - angular
+about: docs/about.md
+usage: docs/usage.md
+use-case: docs/use-case.md
+implementation: docs/implementation.md
+technologies:
+  - "Angular"
+  - "Web"
+  - "Typescript"
+types:
+  - app
+inputs:
+  - label: What is the entity name (use lowercase and if it is compound name use spaces between word)
+    type: text
+    name: entity_name
+    default: pet
+  
+  - label: What is the path where the component will be create?
+    type: text
+    name: component_path
+    default: src/app/
+  
+  - label: What is the api host?
+    type: text
+    name: api_host
+    default: localhost
+  
+  - label: What is the host port?
+    type: int
+    name: api_port
+    default: 3000
+  
+  - label: What is the host resource name?
+    type: text
+    name: api_resource
+    default: "pets"
+  
+  - label: Do you want download ngrx/store dependencies?
+    type: bool
+    name: download_deps
+    default: true
+  
+  - label: Do you want configure ngrx/store modules.forRoot in app.module.ts??
+    type: bool
+    name: config_imports
+    default: true
+
+computedInputs:
+  "entity_plural": "{{ entity_name + 's' }}"
+  "entity_pascal": "{{ entity_name | pascalcase }}"
+  "entity_pascal_plural": "{{ entity_plural | pascalcase }}"
+  "entity_camel": "{{ entity_name | camelcase }}"
+  "entity_camel_plural": "{{ entity_plural | camelcase }}"
+  
+  "filename": "{{ entity_name | replace(' ', '-') }}"
+  "filename_plural": "{{ entity_plural | replace(' ', '-') }}"
+  "component_path": "{{ inputs.component_path + computed_inputs.filename_plural }}"
+
+  "failure_model": "{{ entity_pascal + 'FailureModel' }}"
+  "api_resouce_name": "{{ api_resource | replace(' ', '-') }}"
+  "component_name": "{{ entity_pascal_plural + 'Component' }}"
+  "module_name": "{{ entity_pascal_plural + 'Module' }}"
+  
+  "service_camel": "{{ entity_camel + 'Service' }}"
+  "service_pascal": "{{ entity_pascal + 'Service' }}"
+  "facade_service_calmel": "{{ entity_camel + 'FacadeService' }}"
+  "facade_service_pascal": "{{ entity_pascal + 'FacadeService' }}"
+  
+  "effects_name": "{{ entity_pascal + 'Effects' }}"
+  "reducer_name": "{{ entity_camel + 'Reducer' }}"
+  "feature_selector_name": "{{ entity_camel_plural + 'FeatureSelector' }}"
+
+hooks:
+  - type: run-script
+    trigger: before-render
+    script: ../scripts/build-http-variables.py
+
+  - type: run-script
+    trigger: before-render
+    script: ../scripts/build-store-variables.py
+
+  - type: run
+    trigger: after-render
+    linux:
+      - npm install @ngrx/effects @ngrx/store @ngrx/store-devtools
+      - npm install
+    windows:
+      - npm.cmd install @ngrx/effects @ngrx/store @ngrx/store-devtools
+      - npm.cmd install
+    mac:
+      - npm install @ngrx/effects @ngrx/store @ngrx/store-devtools
+      - npm install
+    condition:
+      variable: download_deps
+      operator: "=="
+      value: true
+
+  - type: code-transformation
+    trigger: after-render
+    path: src/app/app.module.ts
+    code-transformation:
+      typescript:
+        import:
+          - insert: |
+              import { HttpClientModule } from '@angular/common/http';
+              import { EffectsModule } from '@ngrx/effects';
+              import { StoreModule } from '@ngrx/store';
+              import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+        annotation:
+          - NgModule:
+              - attribute: imports
+                insert: |
+                  HttpClientModule,
+                  StoreModule.forRoot({}),
+                  EffectsModule.forRoot({}),
+                  StoreDevtoolsModule.instrument()
+    condition:
+    variable: config_imports
+    operator: "=="
+    value: true
+
+  - type: run
+    trigger: after-render
+    commands:
+      - echo Ulha! Your component has been create! You can add now in any module to manager it. =)
+      - echo You can read doc files to more informations about to use the plugin ;)
+      - echo Enjoy Dev!
