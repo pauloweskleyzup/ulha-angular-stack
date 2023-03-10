@@ -6,8 +6,8 @@ category: frontend
 compatibility:
   - Angular
 technologies:
+  - Angular
   - Typescript
-  - Ngrx/store
   - Web
 about: docs/about.md
 use-cases:
