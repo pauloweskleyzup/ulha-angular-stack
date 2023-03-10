@@ -23,7 +23,7 @@ Para usar todas as ferramentas que contêm nesta stack, antes de tudo o que voc�
 
 ## 1. Obtenha a pilha angular da ULHA
 ```sh
-stk import stack https://github.com/paulowalmeida/ulha-angular-stack
+stk import stack https://github.com/pauloweskleyzup/ulha-angular-stack
 ```
 ### 2. Verifique se importado com sucesso.
 ```sh
@@ -32,6 +32,6 @@ stk list stack | grep ulha-angular-stack
 
 Para obter mais informações sobre como instalar e usar o Stackspot, acesse [este link](https://docs.stackspot.com/docs/stk-cli/installation).
 
-Sinta -se à vontade para pedir ajuda ou sugerir melhorias a partir do nosso [repositorio github](https://github.com/paulowalmeida/ulha-angular-stack/issues).
+Sinta -se à vontade para pedir ajuda ou sugerir melhorias a partir do nosso [repositorio github](https://github.com/pauloweskleyzup/ulha-angular-stack/issues).
 
 Espero essa stack possa ajudá-lo em seu desenvolvimento ;)

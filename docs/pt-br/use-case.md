@@ -8,7 +8,7 @@ Se você não baixou e configurou a pilha angular, **execute as etapas 1 e 2** a
 
 ### 1. Obtenha a pilha angular da ULHA
 ```sh
-stk import stack https://github.com/paulowalmeida/ulha-angular-stack
+stk import stack https://github.com/pauloweskleyzup/ulha-angular-stack
 ```
 ### 2. Verifique se importado com sucesso.
 ```sh
@@ -90,6 +90,6 @@ Enjoy Dev!
 
 Para obter mais informações sobre como instalar e usar o Stackspot, acesse [este link](https://docs.stackspot.com/docs/stk-cli/installation).
 
-Sinta-se à vontade para pedir ajuda ou sugerir melhorias a partir do [repositório github](https://github.com/paulowalmeida/ulha-angular-stack/issues).
+Sinta-se à vontade para pedir ajuda ou sugerir melhorias a partir do [repositório github](https://github.com/pauloweskleyzup/ulha-angular-stack/issues).
 
 Espero que esta stack ajude-o no desenvolvimento do seu projeto ;)

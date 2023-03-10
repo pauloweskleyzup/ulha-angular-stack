@@ -3,7 +3,7 @@ To apply the Plugin in your projects, you need have the StackSpot CLI installed 
 ### 1. Import the Stack on your machine
 
 ```sh
-stk import stack https://github.com/paulowalmeida/ulha-angular-stack
+stk import stack https://github.com/pauloweskleyzup/ulha-angular-stack
 ```
 
 ### 2. Now check if the Stack was successfully imported
@@ -24,6 +24,6 @@ stk apply plugin ulha-angular-stack/service-api-plugin
 git status
 ```
 
-Feel free to ask for help or suggest improvements from our [Github Repository](https://github.com/paulowalmeida/ulha-angular-stack/issues).
+Feel free to ask for help or suggest improvements from our [Github Repository](https://github.com/pauloweskleyzup/ulha-angular-stack/issues).
 
 I hope can help you in your development. ;)

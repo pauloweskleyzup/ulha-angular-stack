@@ -23,7 +23,7 @@ To use all tools that contains in this stack, first of all you need before to do
 
 ### 1. Get Ulha Angular Stack
 ```sh
-stk import stack https://github.com/paulowalmeida/ulha-angular-stack 
+stk import stack https://github.com/pauloweskleyzup/ulha-angular-stack 
 ```
 ### 2. Check if successfully imported.
 ```sh
@@ -32,7 +32,7 @@ stk list stack | grep ulha-angular-stack
 
 For more info about how to install and use stackspot in access [this link](https://docs.stackspot.com/docs/stk-cli/installation)
 
-Feel free to ask for help or suggest improvements from our [Github Repository](https://github.com/paulowalmeida/ulha-angular-stack/issues).
+Feel free to ask for help or suggest improvements from our [Github Repository](https://github.com/pauloweskleyzup/ulha-angular-stack/issues).
 
 I hope can help you in your development. ;)
 
