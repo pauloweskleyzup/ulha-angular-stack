@@ -1,0 +1,161 @@
+name: store-based-component-plugin
+description: Creates an Angular component with defined architecture and fully configured state management
+display-name: Store Based Component Plugin
+picture: plugin.png
+category: frontend
+compatibility:
+  - angular
+about: docs/about.md
+usage: docs/usage.md
+use-case: docs/use-case.md
+implementation: docs/implementation.md
+technologies:
+  - "Angular"
+  - "Web"
+  - "Typescript"
+types:
+  - app
+inputs:
+  - label: Component name (use lowercase and if it is compound name use spaces between word)
+    type: text
+    name: component_name
+    default: pets
+
+  - label: Component selector name
+    type: text
+    name: selector_name
+    default: app-pets
+
+  - label: Entity to be managed by the store (use lowercase and if it is compound name use spaces between word)
+    type: text
+    name: entity_store_name
+    default: pet
+
+  - label: What is the path where the component will be create?
+    type: text
+    name: component_path
+    default: src/app/
+
+  - label: Service name
+    type: text
+    name: service_name
+    default: pet
+
+  - label: API host
+    type: text
+    name: api_host
+    default: localhost
+
+  - label: Host port
+    type: int
+    name: api_port
+    default: 3000
+
+  - label: Resouce name (Please input name in single)
+    type: text
+    name: resource_name
+    default: pet
+
+  - label: Do you want configure http module?
+    type: bool
+    name: config_module
+    default: false
+
+  - label: Do you want download ngrx/store dependencies?
+    type: bool
+    name: download_deps
+    default: true
+
+  - label: Do you want configure ngrx/store modules.forRoot in app.module.ts?
+    type: bool
+    name: config_imports
+    default: true
+
+computedInputs:
+  "component_pascalcase": "{{component_name | pascalcase}}"
+  "component_filename": "{{component_name | replace(' ', '-')}}"
+  "component_classname": "{{component_pascalcase}}Component"
+  "module_name": "{{component_pascalcase}}Module"
+
+  "entity_store_pascalcase": "{{entity_store_name | pascalcase}}"
+  "entity_store_list": "{{entity_store_name}} List"
+  "entity_store_camelcase": "{{entity_store_name | camelcase}}"
+  "entity_store_camelcase_list": "{{entity_store_list | camelcase}}"
+  "entity_store_filename": "{{entity_store_name | replace(' ', '-')}}"
+  "entity_store_action_type_names": "{{entity_store_pascalcase}}ActionTypes"
+
+  "entity_failure_model_pascalcase": "{{entity_store_pascalcase}}FailureModel"
+  "entity_failure_model_filename": "{{entity_store_filename}}"
+
+  "facade_service_instance": "{{entity_store_camelcase}}FacadeService"
+  "facade_service_classname": "{{entity_store_pascalcase}}FacadeService"
+  "facade_filename": "{{entity_store_filename}}"
+
+  "effects_name": "{{entity_store_pascalcase}}Effects"
+  "reducer_name": "{{entity_store_camelcase}}Reducer"
+  "feature_selector_name": "{{entity_store_camelcase}}FeatureSelector"
+
+  "service_classname": "{{service_name | pascalcase}}Service"
+  "service_classname_mock": "{{service_name | pascalcase}}ServiceMock"
+  "service_instance": "{{service_name | camelcase}}Service"
+  "service_filename": "{{service_name | replace(' ', '-')}}"
+  "resource_pascal": "{{resource_name | pascalcase}}"
+  "resource_camel": "{{resource_name | camelcase}}"
+
+  "component_path": "{{inputs.component_path + computed_inputs.component_filename}}"
+  "dependencies": "@ngrx/effects @ngrx/store @ngrx/store-devtools rxjs-marbles"
+hooks:
+  - type: run-script
+    trigger: before-render
+    script: scripts/build-crud-variables.py
+
+  - type: run-script
+    trigger: before-render
+    script: scripts/build-events-store-variables.py
+
+  - type: run
+    trigger: after-render
+    linux:
+      - npm install {{dependencies}}
+      - npm install
+    windows:
+      - npm.cmd install {{dependencies}}
+      - npm.cmd install
+    mac:
+      - npm install {{dependencies}}
+      - npm install
+    condition:
+      variable: download_deps
+      operator: "=="
+      value: true
+
+  - type: code-transformation
+    trigger: after-render
+    path: src/app/app.module.ts
+    code-transformation:
+      typescript:
+        import:
+          - insert: |
+              import { HttpClientModule } from '@angular/common/http';
+              import { EffectsModule } from '@ngrx/effects';
+              import { StoreModule } from '@ngrx/store';
+              import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+        annotation:
+          - NgModule:
+              - attribute: imports
+                insert: |
+                  HttpClientModule,
+                  StoreModule.forRoot({}),
+                  EffectsModule.forRoot({}),
+                  StoreDevtoolsModule.instrument()
+    condition:
+    variable: config_imports
+    operator: "=="
+    value: true
+
+  - type: run
+    trigger: after-render
+    commands:
+      - echo Ulha! Your component has been create! You can add now in any module to manager it. =)
+      - echo You can read doc files to more informations about to use the plugin ;)
+      - echo Enjoy Dev!

@@ -1,0 +1,16 @@
+description: Develop Angular applications with a standard template or with a template with a suggestive architecture, in addition to plugins that will speed up your coding!
+name: ulha-angular-stack
+display-name: Ulha Angular Stack
+picture: stack.png
+category: frontend
+compatibility:
+  - Angular
+technologies:
+  - Angular
+  - Typescript
+  - Web
+about: docs/about.md
+use-cases:
+  - title: Default Architecture Template
+    content: docs/use-case.md
+    stackfile: stackfiles/default-architecture-template.yaml

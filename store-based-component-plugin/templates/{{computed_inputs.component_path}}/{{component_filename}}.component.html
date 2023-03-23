@@ -1,0 +1,41 @@
+<!-- A sample to use ngrx/store -->
+<h1>{{entity_store_list | title}}</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let {{entity_store_camelcase}} of {{entity_store_camelcase_list}}">
+            <td>{{'{{' + entity_store_camelcase + '.id}}'}}</td>
+            <td>{{'{{' + entity_store_camelcase + '.name}}'}}</td>
+            <td><button (click)="showDetails({{entity_store_camelcase + '.id'}})">Details</button></td>
+            <td><button (click)="edit({{entity_store_camelcase + '.id'}})">Edit</button></td>
+            <td><button (click)="remove({{entity_store_camelcase + '.id'}})">Remove</button></td>
+        </tr>
+    </tbody>
+</table>
+<br>
+
+<div *ngIf="{{entity_store_camelcase + 'Selected'}} && showMode === 'view'">
+    <button (click)="create()">New {{entity_store_camelcase}}</button>
+    <ul>
+        <li>Name: {{'{{' + entity_store_camelcase + 'Selected.name}}'}}</li>
+        <li>Breed: {{'{{' + entity_store_camelcase + 'Selected.breed}}'}}</li>
+        <li>Weight: {{'{{' + entity_store_camelcase + 'Selected.weight}}'}} Kg</li>
+        <li>Age: {{'{{formatAge(' + entity_store_camelcase + 'Selected.age)}}'}}</li>
+    </ul>
+</div>
+
+<form *ngIf="showMode === 'edit' || !{{entity_store_camelcase + 'Selected'}} " [formGroup]="form">
+    Name: <input formControlName="name"/> <br>
+    Breed: <input formControlName="breed"/> <br>
+    Weight: <input formControlName="weight"/> <br>
+    Age - Years: <input formControlName="years"/> Months: <input formControlName="months"/><br>
+    <button (click)="saveEdit()">{{'{{formButtonLabel}}'}}</button>
+    <button (click)="clearFields()">Clear</button>
+</form>

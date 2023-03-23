@@ -1,0 +1,111 @@
+name: store-module-plugin
+description: Provide a state management layer using ngrx/store and abstract usage with a facade service.
+display-name: Store Module Plugin
+picture: plugin.png
+category: frontend
+compatibility:
+  - angular
+about: docs/about.md
+usage: docs/usage.md
+use-case: docs/use-case.md
+implementation: docs/implementation.md
+technologies:
+  - "Angular"
+  - "Web"
+  - "Typescript"
+types:
+  - app
+inputs:
+  - label: Entity to be managed by the store (use lowercase and if it is compound name use spaces between word)
+    type: text
+    name: entity_store_name
+    default: pet
+
+  - label: What is the path where the component will be create?
+    type: text
+    name: store_path
+    default: src/app/
+
+  - label: Do you want download ngrx/store dependencies?
+    type: bool
+    name: download_deps
+    default: true
+
+  - label: Do you want configure ngrx/store modules.forRoot in app.module.ts?
+    type: bool
+    name: config_imports
+    default: true
+
+computedInputs:
+  "entity_store_list": "{{ entity_store_name + ' List' }}"
+  "entity_store_pascalcase": "{{ entity_store_name | pascalcase }}"
+  "entity_store_camelcase": "{{ entity_store_name | camelcase }}"
+  "entity_store_camelcase_list": "{{ entity_store_list | camelcase }}"
+  "entity_store_filename": "{{ entity_store_name | replace(' ', '-') }}"
+  "store_path": "{{ inputs.store_path + inputs.entity_store_name + 's' }}"
+
+  "entity_failure_model_pascalcase": "{{ entity_store_pascalcase + 'FailureModel' }}"
+  "entity_failure_model_filename": "{{ entity_store_filename }}"
+
+  "facade_service_classname": "{{ entity_store_pascalcase + 'FacadeService' }}"
+  "facade_service_filename": "{{ entity_store_name | replace(' ', '-') }}"
+
+  "effects_name": "{{ entity_store_pascalcase + 'Effects' }}"
+  "reducer_name": "{{ entity_store_camelcase + 'Reducer' }}"
+  "feature_selector_name": "{{ entity_store_camelcase + 'FeatureSelector' }}"
+
+hooks:
+  - type: run-script
+    trigger: before-render
+    script: scripts/build-crud-variables.py
+
+  - type: run-script
+    trigger: before-render
+    script: scripts/build-store-variables.py
+
+  - type: run
+    trigger: after-render
+    linux:
+      - npm install @ngrx/effects @ngrx/store @ngrx/store-devtools
+      - npm install
+    windows:
+      - npm.cmd install @ngrx/effects @ngrx/store @ngrx/store-devtools
+      - npm.cmd install
+    mac:
+      - npm install @ngrx/effects @ngrx/store @ngrx/store-devtools
+      - npm install
+    condition:
+      variable: download_deps
+      operator: "=="
+      value: true
+
+  - type: code-transformation
+    trigger: after-render
+    path: src/app/app.module.ts
+    code-transformation:
+      typescript:
+        import:
+          - insert: |
+              import { EffectsModule } from '@ngrx/effects';
+              import { StoreModule } from '@ngrx/store';
+              import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+        annotation:
+          - NgModule:
+              - attribute: imports
+                insert: |
+                  StoreModule.forRoot({ {{ feature_selector_name }}: {{ reducer_name }} }),
+                  EffectsModule.forRoot({}),
+                  StoreDevtoolsModule.instrument()
+    condition:
+    variable: config_imports
+    operator: "=="
+    value: true
+
+  - type: run
+    trigger: after-render
+    commands:
+      - echo Ulha! Your store module has been create!
+      - echo You can add now in any module to manager it. =)
+      - echo Also dont forget to configure the effects on .effects.ts file ;)
+      - echo You can read doc files to more informations about to use the plugin ;)
+      - echo Enjoy Dev!

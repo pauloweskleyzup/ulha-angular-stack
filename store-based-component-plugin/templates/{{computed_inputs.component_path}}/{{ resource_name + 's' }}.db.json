@@ -1,0 +1,47 @@
+{
+  "{{resource_name + 's'}}": [
+    {
+      "id": 1,
+      "name": "Pichi",
+      "breed": "Pinscher",
+      "weight": 5,
+      "age": {
+        "years": "3",
+        "months": "6"
+      },
+      "speciesId": 1
+    },
+    {
+      "id": 2,
+      "name": "Pretinho",
+      "breed": "Yorkshire Terrier",
+      "weight": 6.5,
+      "age": {
+        "years": "3",
+        "months": "6"
+      },
+      "speciesId": 1
+    },
+    {
+      "id": 3,
+      "name": "Garfield",
+      "breed": "Persian",
+      "weight": 7,
+      "age": {
+        "years": "3",
+        "months": "2"
+      },
+      "speciesId": 2
+    }
+  ],
+  "species": [
+    {
+      "id": 1,
+      "name": "Dog"
+    },
+    {
+      "id": 2,
+      "name": "Cat"
+    }
+  ]
+}

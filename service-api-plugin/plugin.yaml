@@ -1,0 +1,86 @@
+name: service-api-plugin
+description: This plugin allows you to quickly create a base structure of a service that communicates with an API.
+display-name: Service API Plugin
+picture: plugin.png
+category: frontend
+compatibility:
+  - Angular
+about: docs/about.md
+usage: docs/usage.md
+use-case: docs/use-case.md
+implementation: docs/implementation.md
+technologies:
+  - "Angular"
+  - "Api"
+  - "Rest"
+  - "Typescript"
+  - "Web"
+types:
+  - app
+inputs:
+  - label: Service name
+    type: text
+    name: service_name
+    default: pet
+
+  - label: Service path
+    type: text
+    name: service_path
+    default: src/app/
+
+  - label: API host
+    type: text
+    name: api_host
+    default: localhost
+
+  - label: Host port
+    type: int
+    name: api_port
+    default: 3000
+
+  - label: Resouce name (Please input name in single)
+    type: text
+    name: resource_name
+    default: pet
+
+  - label: Do you want configure http module?
+    type: bool
+    name: config_module
+    default: false
+
+computedInputs:
+  "service_filename": "{{ service_name | replace(' ', '-') }}"
+  "service_classname": "{{ service_name | pascalcase + 'Service'}}"
+  "resouce_pascal": "{{ resource_name | pascalcase }}"
+  "resouce_camel": "{{ resource_name | camelcase }}"
+  "service_path": "{{ inputs.service_path + computed_inputs.service_filename }}"
+
+hooks:
+  - type: run-script
+    trigger: before-render
+    script: scripts/build-crud-variables.py
+  - type: code-transformation
+    trigger: after-render
+    working-dir: "{{target_path}}"
+    path: src/app/app.module.ts
+    code-transformation:
+      typescript:
+        import:
+          - insert: >
+              import { HttpClientModule } from '@angular/common/http';
+        annotation:
+          - NgModule:
+              - attribute: imports
+                insert: >
+                  HttpClientModule
+    condition:
+      variable: config_module
+      operator: "=="
+      value: true
+
+  - type: run
+    trigger: after-render
+    commands:
+      - echo Ulha! Your service has been create!
+      - echo You can read doc files to more informations about to use the plugin ;)
+      - echo Enjoy Dev!

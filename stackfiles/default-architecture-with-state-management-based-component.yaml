@@ -1,0 +1,7 @@
+type: app
+description: This stackfile allows the creation of a project and then a first component
+  based on the state management based component plugin.
+template: ulha-angular-stack/default-architecture-template
+plugins:
+- plugin: ulha-angular-stack/store-based-component-plugin
+

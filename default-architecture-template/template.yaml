@@ -1,0 +1,99 @@
+name: default-architecture-template
+description: Creates an angular project in the default architecture
+types:
+  - app-template
+inputs:
+  - label: Project name
+    type: text
+    name: project_name
+
+  - label: Angular version
+    type: text
+    items:
+      - ~15.0.0
+      - ~14.2.0
+      - ~14.1.3
+      - ~14.0.7
+      - ~13.3.0
+      - ~13.2.6
+      - ~13.1.4
+      - ~13.0.4
+      - ~12.2.18
+      - ~12.1.4
+      - ~12.0.5
+      - ~11.2.19
+      - ~11.1.4
+      - ~11.0.7
+      - ~10.2.4
+      - ~10.1.7
+      - ~10.0.8
+      - ~9.1.15
+      - ~9.0.7
+    name: angular_version
+
+  - label: Style
+    type: text
+    items:
+      - scss
+      - css
+      - saas
+      - less
+    name: style_type
+
+  - label: Add app-rounting.module.ts ?
+    type: bool
+    name: has_routing
+    default: true
+
+  - label: Download and install angular dependencies?
+    type: bool
+    name: download_deps
+    default: true
+
+hooks:
+  - type: run
+    trigger: after-render
+    commands:
+      - echo Creating the base project. wait...
+
+  - type: run
+    trigger: after-render
+    linux:
+      - npx @angular/cli@{{angular_version}} new {{project_name}} --style={{style_type}} {{ '--routing' if has_routing else '' }} --skip-install
+    windows:
+      - npx.cmd @angular/cli@{{angular_version}} new {{project_name}} --style={{style_type}} {{ '--routing' if has_routing else '' }} --skip-install
+    mac:
+      - npx @angular/cli@{{angular_version}} new {{project_name}} --style={{style_type}} {{ '--routing' if has_routing else '' }} --skip-install
+
+  - type: run-script
+    trigger: after-render
+    script: ../scripts/handle-files-after-build.py
+
+  - type: run
+    trigger: after-render
+    commands:
+      - echo Base project creation is complete!
+      - echo Dependencies are being downloaded and configured...
+
+  - type: run
+    trigger: after-render
+    linux:
+      - npm i
+    windows:
+      - npm.cmd i
+    mac:
+      - npm i
+    condition:
+      variable: download_deps
+      operator: "=="
+      value: true
+
+  - type: run
+    trigger: after-render
+    commands:
+      - echo Ulha!
+      - echo You have created the project based on version {{angular_version}}
+      - echo Make you sure using node.js compatible.
+      - echo More informations in link https://stackoverflow.com/a/60258560
+      - echo How about try it the plugin created to accelerate your coding? ;)
+      - echo Enjoy Dev!
